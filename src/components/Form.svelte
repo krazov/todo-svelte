@@ -1,11 +1,11 @@
 <script>
-    import { addTodo } from '../store/todos.store.js';
+    import todos from '../store/todos.store.js';
     import { createTodo } from '../utils/item-creator.helper.js';
 
     let task = '';
 
     const submitForm = (event) => {
-        addTodo(createTodo(task));
+        todos.add(createTodo(task));
         task = '';
     }
 </script>

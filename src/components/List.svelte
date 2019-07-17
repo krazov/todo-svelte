@@ -1,5 +1,5 @@
 <script>
-    import { todos, changeStatus, removeTodo } from '../store/todos.store.js';
+    import todos from '../store/todos.store.js';
     import Item from './Item.svelte';
 
     let items;
@@ -9,15 +9,15 @@
     });
 
     const handleMarkDone = ({ detail: { id }}) => {
-        changeStatus(id, true);
+        todos.changeStatus(id, true);
     };
 
     const handleMarkUndone = ({ detail: { id }}) => {
-        changeStatus(id, false);
+        todos.changeStatus(id, false);
     };
 
     const handleRemoveTodo = ({ detail: { id }}) => {
-        removeTodo(id);
+        todos.remove(id);
     };
 
     $: sortedItems = [...items].sort(

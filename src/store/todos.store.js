@@ -1,20 +1,22 @@
 import { writable } from 'svelte/store';
 
-const storagedData = localStorage.getItem('todo-list');
-const initialData = storagedData ? JSON.parse(storagedData) : [];
+const todos = writable([]);
 
-export const todos = writable(Array.isArray(initialData) ? initialData : []);
+export const hydrateStore = (data) => {
+    todos.update((list) => {
+        if (list.length) {
+            throw Error('Store already hydrated');
+        }
 
-todos.subscribe((data) => {
-    localStorage.setItem('todo-list', JSON.stringify(data));
-    data.length && localStorage.setItem('latest-todo-item', JSON.stringify(data.slice(-1)[0].id));
-});
+        return data;
+    });
+};
 
 export const addTodo = (todo) => {
     todos.update((list) => [...list, todo]);
 };
 
-export const changeStatus = (id, done) => {
+export const changeTodoStatus = (id, done) => {
     todos.update((list) => {
         const index = list.findIndex(item => item.id == id);
 
@@ -38,4 +40,10 @@ export const removeTodo = (id) => {
     });
 };
 
-export default todos;
+export default {
+    subscribe: todos.subscribe,
+    hydrate: hydrateStore,
+    add: addTodo,
+    changeStatus: changeTodoStatus,
+    remove: removeTodo,
+};

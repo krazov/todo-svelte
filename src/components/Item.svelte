@@ -1,35 +1,30 @@
 <script>
     import { createEventDispatcher } from 'svelte';
 
-    const dispatch = createEventDispatcher();
-
     export let index;
     export let id;
     export let task;
     export let done;
 
-    const markDone = () => {
-        dispatch('markDone', { id })
-    };
+    const dispatch = createEventDispatcher();
+    const createDispatcher = (name) => () => {
+        dispatch(name, { id });
+    }
 
-    const markUndone = () => {
-        dispatch('markUndone', { id })
-    };
-
-    const removeClicked = () => {
-        dispatch('removeTodo', { id })
-    };
+    const MARK_DONE = 'markDone';
+    const MARK_UNDONE = 'markUndone';
+    const REMOVE_CLICKED = 'removeTodo';
 </script>
 
 <li class:done={done}>
     <span>{task}</span>
     <span>
         {#if done}
-            <button class="uncheck" on:click={markUndone}>Mark undone</button>
+            <button class="uncheck" on:click={createDispatcher(MARK_UNDONE)}>Mark undone</button>
         {:else}
-            <button class="check" on:click={markDone}>Mark done</button>
+            <button class="check" on:click={createDispatcher(MARK_DONE)}>Mark done</button>
         {/if}
-        <button class="delete" on:click={removeClicked}>Remove</button>
+        <button class="delete" on:click={createDispatcher(REMOVE_CLICKED)}>Remove</button>
     </span>
 </li>
 
@@ -41,7 +36,9 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 0.5rem;
+        opacity: 1;
         padding: 0.5rem;
+        transition: background-color 150ms ease, opacity 300ms ease;
     }
 
     .done {

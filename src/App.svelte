@@ -1,11 +1,22 @@
 <script>
+	import todos from './store/todos.store.js';
 	import List from './components/List.svelte';
 	import Form from './components/Form.svelte';
+	import './side-effects/handle-localstorage.js';
 
 	export let name;
+
+	let todosList = [];
+
+	const unsubscribeTodos = todos.subscribe((data) => {
+		todosList = data;
+	})
+
+	$: hasTodos = todosList.length > 0;
 </script>
 
 <svelte:head>
+	<title>Todo App: The Svelte Edition</title>
 	<style>
 		body {
 			padding: 0;
@@ -23,7 +34,7 @@
 	<h1>Todo list</h1>
 
 	<main>
-		<p>Your list:</p>
+		{#if hasTodos}<p>Your tasks:</p>{/if}
 		<List />
 		<Form />
 	</main>
